@@ -2,13 +2,16 @@
 <html lang="it">
 
 <head>
+  <meta charset="utf-8">
   <title>VulnTracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <table id="vulnList">
-    <tr>
+  <h1>VulnTracker</h1>
+
+  <table id="form">
+        <tr>
       <td>id</td>
         
     </tr>
@@ -67,6 +70,20 @@
       <td><button onclick="getInputValue()">Cambia Stato</button></td>
       <td><button onclick="getInputValue()">Elimina</button></td>
     </tr>
+  </table>
+  <table id="vulnList">
+    <thead>
+      <tr>
+        <th>nome</th>
+        <th>severita</th>
+        <th>sistema</th>
+        <th>stato</th>
+        <th>descrizione</th>
+        <th>data</th>
+        <th>azioni</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
   </table>
 
   <script src="app.js"></script>
