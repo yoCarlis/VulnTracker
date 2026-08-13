@@ -10,15 +10,30 @@
   <table id="vulnList">
     <tr>
       <td>id</td>
-      <td></td>
+        
     </tr>
     <tr>
       <td>nome</td>
-      <td></td>
+      <td><input type="text" id="username" value=""></td>
+      <td><button onclick="getInputValue()">Enter</button></td>
     </tr>
     <tr>
       <td>severita</td>
-      <td></td>
+      <td colspan="2">
+        <div class="sevbut">
+          <label class="btn-sev low">
+            <input type="radio" name="severita" value="Low"> Low
+          </label>
+          <label class="btn-sev medium">
+            <input type="radio" name="severita" value="Medium"> Medium
+          </label>
+          <label class="btn-sev high">
+            <input type="radio" name="severita" value="High"> High
+          </label>
+          <label class="btn-sev critical">
+            <input type="radio" name="severita" value="Critical"> Critical
+          </label>
+      </div>
     </tr>
     <tr>
       <td>sistema</td>
@@ -26,15 +41,31 @@
     </tr>
     <tr>
       <td>stato</td>
-      <td></td>
+      <td colspan="2">
+        <div class="sttbut">
+          <label class="btn-sev Open">
+            <input type="radio" name="stato" value="Open"> Open
+          </label>
+          <label class="btn-sev InProgress">
+            <input type="radio" name="stato" value="InProgress"> In Progress
+          </label>
+          <label class="btn-sev Closed">
+            <input type="radio" name="stato" value="Closed"> Closed
+          </label>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>data</td>
-      <td></td>
+      <td colspan="2">
+        <label for="data-vulnerabilita"></label>
+        <input type="date" id="data-vulnerabilita" name="data">
+      </td>
     </tr>
     <tr>
       <td>azioni</td>
-      <td></td>
+      <td><button onclick="getInputValue()">Cambia Stato</button></td>
+      <td><button onclick="getInputValue()">Elimina</button></td>
     </tr>
   </table>
 
