@@ -10,15 +10,14 @@
 <body>
   <h1>VulnTracker</h1>
 
+  <form onsubmit="addVuln(); addVulSev(); addVulst(); addVuld(); return false;">
   <table id="form">
-        <tr>
+    <tr>
       <td>id</td>
-        
     </tr>
     <tr>
       <td>nome</td>
-      <td><input type="text" id="username" value=""></td>
-      <td><button onclick="getInputValue()">Enter</button></td>
+      <td><input type="text" id="vul_name" value=""></td>
     </tr>
     <tr>
       <td>severita</td>
@@ -43,6 +42,10 @@
       <td></td>
     </tr>
     <tr>
+      <td>descrizione</td>
+      <td><input type="text" id="vul_desc" value=""></td>
+    </tr>
+    <tr>
       <td>stato</td>
       <td colspan="2">
         <div class="sttbtn">
@@ -58,6 +61,7 @@
         </div>
       </td>
     </tr>
+
     <tr>
       <td>data</td>
       <td colspan="2">
@@ -67,10 +71,10 @@
     </tr>
     <tr>
       <td>azioni</td>
-      <td><button onclick="getInputValue()">Cambia Stato</button></td>
-      <td><button onclick="getInputValue()">Elimina</button></td>
+      <td><button type="submit">Aggiungi</button></td>
     </tr>
   </table>
+  </form>
   <table id="vulnList">
     <thead>
       <tr>

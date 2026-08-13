@@ -253,6 +253,45 @@ function onCambiaStato(id, nuovoStato) {
   return true;
 }
 
+function addVuln() {
+  const name_el = document.getElementById("vul_name");
+  let nome = name_el.value;
+  if (!nome) {
+    alert("Inserisci un nome valido");
+    return false;
+  }
+
+  console.log(nome);
+}
+
+function addVulSev() {
+  const severita_el = document.querySelector('input[name="severita"]:checked');
+  if (!severita_el) {
+    alert("Seleziona una severità");
+    return false;
+  }
+ let severitaVal = severita_el.value;
+
+  console.log(severitaVal);
+}
+
+function addVulst() {
+  const state_el = document.querySelector('input[name="stato"]:checked');
+  if (!state_el) {
+    alert("Seleziona uno stato");
+    return false;
+  }
+  let statoVal = state_el.value;
+
+  console.log(statoVal);
+}
+
+function addVuld() {
+  const desc_el = document.getElementById("vul_desc");
+  let descVal = desc_el.value;
+  console.log(descVal);
+}
+
 // --- avvio ---
 
 vulnerabilita = caricaVulnerabilita();
