@@ -1,5 +1,9 @@
 const COLONNE = 7;
 
+// valori ammessi: servono al rendering (tendina stato) e alla validazione
+const SEVERITA = ["Critical", "High", "Medium", "Low"];
+const STATI = ["Open", "In Progress", "Closed"];
+
 // "Critical" -> "critical", usato per le classi CSS dei badge
 function slug(valore) {
   return String(valore).toLowerCase().replace(/\s+/g, "-");
@@ -10,6 +14,32 @@ function creaBadge(testo, tipo) {
   span.className = "badge " + tipo + "-" + slug(testo);
   span.textContent = testo;
   return span;
+}
+
+function creaSelectStato(vuln) {
+  const select = document.createElement("select");
+  select.className = "stato-select stato-" + slug(vuln.stato);
+  select.dataset.id = vuln.id;
+
+  STATI.forEach(function (stato) {
+    const option = document.createElement("option");
+    option.value = stato;
+    option.textContent = stato;
+    if (stato === vuln.stato) option.selected = true;
+    select.appendChild(option);
+  });
+
+  // uno stato non previsto (es. dato vecchio in localStorage) resterebbe
+  // invisibile fra le opzioni: lo aggiungo così non viene riscritto di nascosto
+  if (STATI.indexOf(vuln.stato) === -1) {
+    const option = document.createElement("option");
+    option.value = vuln.stato;
+    option.textContent = vuln.stato + " (?)";
+    option.selected = true;
+    select.appendChild(option);
+  }
+
+  return select;
 }
 
 function creaRiga(vuln) {
@@ -23,7 +53,7 @@ function creaRiga(vuln) {
     if (i === 1) {
       td.appendChild(creaBadge(vuln.severita, "sev"));
     } else if (i === 3) {
-      td.appendChild(creaBadge(vuln.stato, "stato"));
+      td.appendChild(creaSelectStato(vuln));
     } else {
       // textContent (non innerHTML): nome e descrizione sono input utente
       td.textContent = valore;
@@ -73,13 +103,22 @@ function renderTable(vulnerabilita) {
   tbody.replaceChildren(frammento);
 }
 
-// Delega: un solo listener sul tbody, sopravvive ai re-render.
-// Definisci onEliminaVuln(id) dove gestisci lo stato.
-document.querySelector("#vulnList tbody").addEventListener("click", function (e) {
+// Delega: listener sul tbody, sopravvivono ai re-render delle righe.
+const tbodyVuln = document.querySelector("#vulnList tbody");
+
+tbodyVuln.addEventListener("click", function (e) {
   const bottone = e.target.closest(".btn-elimina");
   if (!bottone) return;
-  if (typeof onEliminaVuln === "function") {
-    onEliminaVuln(bottone.dataset.id);
+  onEliminaVuln(bottone.dataset.id);
+});
+
+tbodyVuln.addEventListener("change", function (e) {
+  const select = e.target.closest(".stato-select");
+  if (!select) return;
+  if (onCambiaStato(select.dataset.id, select.value)) {
+    // ricoloro solo questa select: un renderTable completo la ricreerebbe
+    // da zero e il focus da tastiera salterebbe via a metà interazione
+    select.className = "stato-select stato-" + slug(select.value);
   }
 });
 
@@ -128,9 +167,7 @@ function salvaVulnerabilita(lista) {
 
 // --- dati di prova, da rimuovere quando ci sarà il form di inserimento ---
 
-const SEVERITA = ["Critical", "High", "Medium", "Low"];
-const STATI = ["Open", "In Progress", "Closed"];
-const SISTEMI = ["login-service", "portal-web", "api-gateway", "billing-db", "mail-relay"];
+const SISTEMI =["login-service", "portal-web", "api-gateway", "billing-db", "mail-relay"];
 const TIPI = [
   { nome: "SQL Injection", descrizione: "Parametro non sanitizzato nel form login." },
   { nome: "XSS riflesso", descrizione: "Query string riflessa nella pagina di ricerca." },
@@ -171,6 +208,53 @@ function datiRandom(quante) {
   return lista;
 }
 
+// --- stato ---
+
+// unica fonte di verità: renderTable e salvaVulnerabilita leggono sempre da qui
+let vulnerabilita = [];
+
+function onEliminaVuln(id) {
+  const primaCount = vulnerabilita.length;
+  // confronto tra stringhe: dataset.id è sempre stringa, vuln.id potrebbe
+  // arrivare come numero da un JSON scritto a mano
+  vulnerabilita = vulnerabilita.filter(function (v) {
+    return String(v.id) !== String(id);
+  });
+
+  if (vulnerabilita.length === primaCount) {
+    console.warn("Nessuna vulnerabilità con id " + id + ".");
+    return;
+  }
+
+  salvaVulnerabilita(vulnerabilita);
+  renderTable(vulnerabilita);
+}
+
+// ritorna true se lo stato è stato aggiornato
+function onCambiaStato(id, nuovoStato) {
+  if (STATI.indexOf(nuovoStato) === -1) {
+    console.warn("Stato non ammesso: " + nuovoStato);
+    return false;
+  }
+
+  const vuln = vulnerabilita.find(function (v) {
+    return String(v.id) === String(id);
+  });
+
+  if (!vuln) {
+    console.warn("Nessuna vulnerabilità con id " + id + ".");
+    return false;
+  }
+
+  if (vuln.stato === nuovoStato) return false;
+
+  vuln.stato = nuovoStato;
+  salvaVulnerabilita(vulnerabilita);
+  return true;
+}
+
 // --- avvio ---
 
-renderTable(caricaVulnerabilita());
+vulnerabilita = caricaVulnerabilita();
+salvaVulnerabilita(vulnerabilita); // persiste anche il seed random, così l'eliminazione regge al refresh
+renderTable(vulnerabilita);

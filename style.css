@@ -74,6 +74,24 @@ h1 {
   color: #1f5b2c;
 }
 
+.stato-select {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  cursor: pointer;
+  /* i colori arrivano dalle classi .stato-* condivise con i badge */
+  background: #eceff3;
+  color: #3e4c59;
+}
+
+.stato-select:focus-visible {
+  outline: 2px solid #1d4b8f;
+  outline-offset: 1px;
+}
+
 .stato-open {
   background: #eceff3;
   color: #3e4c59;
