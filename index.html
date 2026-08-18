@@ -10,47 +10,9 @@
 <body>
   <h1>VulnTracker</h1>
 
-  <!-- i badge sono generati da renderStatistiche() a partire da statistiche -->
-  <div id="statistiche">
-    <div class="stat-gruppo">
-      <span class="stat-titolo">Severità</span>
-      <span id="statSeverita"></span>
-    </div>
-    <div class="stat-gruppo">
-      <span class="stat-titolo">Stato</span>
-      <span id="statStato"></span>
-    </div>
-  </div>
-
-  <div id="controlli">
-    <label for="filtroSeverita">Severità</label>
-    <!-- le opzioni sono popolate da app.js a partire da SEVERITA e STATI -->
-    <select id="filtroSeverita"></select>
-
-    <label for="filtroStato">Stato</label>
-    <select id="filtroStato"></select>
-
-    <label for="ordinamento">Ordina</label>
-    <select id="ordinamento">
-      <option value="">Ordine di inserimento</option>
-      <option value="sev-desc">Severità: Critical → Low</option>
-      <option value="sev-asc">Severità: Low → Critical</option>
-    </select>
-
-    <label for="filtro">filtro</label>
-    <input type="text" id="filtro" placeholder="cerca vulnerabilità:">
-
-    <button type="button" id="azzeraFiltri">Azzera</button>
-    <span id="contatore"></span>
-  </div>
-
   <form id="formVulnerabilita" onsubmit="pushVul(); return false;">
   <table id="form">
     <tbody>
-    <tr>
-      <td>id</td>
-      <td><input type="text" id="vul_id" value="" hidden></td>
-    </tr>
     <tr>
       <td>nome</td>
       <td><input type="text" id="vul_name" value=""></td>
@@ -112,6 +74,40 @@
     </tbody>
   </table>
   </form>
+
+  <div id="controlli">
+    <label for="filtroSeverita">Severità</label>
+    <!-- le opzioni sono popolate da app.js a partire da SEVERITA e STATI -->
+    <select id="filtroSeverita"></select>
+
+    <label for="filtroStato">Stato</label>
+    <select id="filtroStato"></select>
+
+    <label for="ordinamento">Ordina</label>
+    <select id="ordinamento">
+      <option value="">Ordine di inserimento</option>
+      <option value="sev-desc">Severità: Critical → Low</option>
+      <option value="sev-asc">Severità: Low → Critical</option>
+    </select>
+
+    <label for="filtro">filtro</label>
+    <input type="text" id="filtro" placeholder="cerca vulnerabilità:">
+
+    <button type="button" id="azzeraFiltri">Azzera</button>
+    <span id="contatore"></span>
+  </div>
+  
+  <div id="statistiche">
+    <div class="stat-gruppo">
+      <span class="stat-titolo">Severità</span>
+      <span id="statSeverita"></span>
+    </div>
+    <div class="stat-gruppo">
+      <span class="stat-titolo">Stato</span>
+      <span id="statStato"></span>
+    </div>
+  </div>
+
   <table id="vulnList">
     <thead>
       <tr>

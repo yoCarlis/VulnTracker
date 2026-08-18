@@ -8,6 +8,11 @@ h1 {
   font-size: 1.4rem;
 }
 
+#form {
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
 #statistiche {
   display: flex;
   gap: 2rem;
@@ -49,6 +54,143 @@ h1 {
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid #dfe3e8;
+
+#form td {
+  padding: 0.35rem 0.75rem 0.35rem 0;
+  vertical-align: middle;
+}
+
+/* prima colonna: etichette, stesso trattamento degli header di tabella */
+#form td:first-child {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #52606d;
+  white-space: nowrap;
+  padding-right: 1rem;
+}
+
+#form input[type="text"],
+#form input[type="date"] {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  background: #fff;
+  color: inherit;
+  min-width: 18rem;
+}
+
+#form input[type="date"] {
+  min-width: 0;
+}
+
+#form input[type="text"]:focus-visible,
+#form input[type="date"]:focus-visible {
+  outline: 2px solid #1d4b8f;
+  outline-offset: 1px;
+  border-color: #1d4b8f;
+}
+
+#form button[type="submit"] {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid #1d4b8f;
+  border-radius: 4px;
+  background: #1d4b8f;
+  color: #fff;
+  cursor: pointer;
+}
+
+#form button[type="submit"]:hover {
+  background: #163a6e;
+}
+
+/* gruppi di radio come pillole, stessa forma dei badge in tabella */
+.sevbtn,
+.sttbtn {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.btn-sev {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #52606d;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* il radio resta nel DOM (app.js legge input[name]:checked) ma è invisibile */
+.btn-sev input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.btn-sev:hover {
+  background: #f5f7fa;
+}
+
+.btn-sev:has(input:focus-visible) {
+  outline: 2px solid #1d4b8f;
+  outline-offset: 1px;
+}
+
+/* selezionato: stessi colori dei badge di severità e stato */
+.btn-sev.critical:has(input:checked) {
+  background: #fbe4e4;
+  color: #8f1b1b;
+  border-color: #8f1b1b;
+}
+
+.btn-sev.high:has(input:checked) {
+  background: #fdece0;
+  color: #94430c;
+  border-color: #94430c;
+}
+
+.btn-sev.medium:has(input:checked) {
+  background: #fdf3d8;
+  color: #7a5c05;
+  border-color: #7a5c05;
+}
+
+.btn-sev.low:has(input:checked),
+.btn-sev.Closed:has(input:checked) {
+  background: #e3f1e6;
+  color: #1f5b2c;
+}
+
+.btn-sev.Open:has(input:checked) {
+  background: #eceff3;
+  color: #3e4c59;
+}
+
+.btn-sev.InProgress:has(input:checked) {
+  background: #e2ecfb;
+  color: #1d4b8f;
+}
+
+#controlli {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  padding-top: 0.75rem;
+  border-bottom: 1px solid #dfe3e8;
+  border-top: 1px solid #dfe3e8;
 }
 
 #controlli label {
@@ -70,10 +212,6 @@ h1 {
   border: 1px solid #cbd2d9;
   border-radius: 4px;
   background: #fff;
-}
-
-#controlli button {
-  cursor: pointer;
 }
 
 #contatore {
@@ -128,7 +266,7 @@ h1 {
   white-space: nowrap;
 }
 
-.sev-critical {
+  .sev-critical {
   background: #fbe4e4;
   color: #8f1b1b;
 }
@@ -147,7 +285,7 @@ h1 {
   background: #e3f1e6;
   color: #1f5b2c;
 }
-
+  
 .stato-select {
   font: inherit;
   font-size: 0.75rem;
