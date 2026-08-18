@@ -74,17 +74,17 @@ function creaRiga(vuln) {
   return tr;
 }
 
-function creaRigaVuota() {
+function creaRigaVuota(messaggio) {
   const tr = document.createElement("tr");
   const td = document.createElement("td");
   td.colSpan = COLONNE;
   td.className = "vuoto";
-  td.textContent = "Nessuna vulnerabilità registrata.";
+  td.textContent = messaggio || "Nessuna vulnerabilità registrata.";
   tr.appendChild(td);
   return tr;
 }
 
-function renderTable(vulnerabilita) {
+function renderTable(vulnerabilita, messaggioVuoto) {
   const tbody = document.querySelector("#vulnList tbody");
   if (!tbody) return;
 
@@ -93,7 +93,7 @@ function renderTable(vulnerabilita) {
   // un solo reflow: costruisco tutto in memoria e sostituisco il contenuto
   const frammento = document.createDocumentFragment();
   if (lista.length === 0) {
-    frammento.appendChild(creaRigaVuota());
+    frammento.appendChild(creaRigaVuota(messaggioVuoto));
   } else {
     lista.forEach(function (vuln) {
       frammento.appendChild(creaRiga(vuln));
@@ -115,11 +115,22 @@ tbodyVuln.addEventListener("click", function (e) {
 tbodyVuln.addEventListener("change", function (e) {
   const select = e.target.closest(".stato-select");
   if (!select) return;
-  if (onCambiaStato(select.dataset.id, select.value)) {
-    // ricoloro solo questa select: un renderTable completo la ricreerebbe
-    // da zero e il focus da tastiera salterebbe via a metà interazione
-    select.className = "stato-select stato-" + slug(select.value);
+  if (!onCambiaStato(select.dataset.id, select.value)) return;
+
+  const vuln = vulnerabilita.find(function (v) {
+    return String(v.id) === String(select.dataset.id);
+  });
+
+  if (vuln && !corrispondeAiFiltri(vuln)) {
+    // il nuovo stato esce dal filtro attivo (es. filtro "Open" e la metti
+    // "Closed"): la riga deve sparire, quindi qui il re-render serve
+    aggiornaVista();
+    return;
   }
+
+  // altrimenti ricoloro solo questa select: un renderTable completo la
+  // ricreerebbe da zero e il focus da tastiera salterebbe via
+  select.className = "stato-select stato-" + slug(select.value);
 });
 
 // --- caricamento dati ---
@@ -129,6 +140,7 @@ const STORAGE_KEY = "vulntracker_data";
 function caricaVulnerabilita() {
   let salvato;
   try {
+    // carica i dati dal localStorage
     salvato = localStorage.getItem(STORAGE_KEY);
   } catch (e) {
     // localStorage può lanciare: modalità privata, o file:// su alcuni browser
@@ -137,18 +149,22 @@ function caricaVulnerabilita() {
   }
 
   if (salvato === null) {
+    // se i dati sono assenti ritorna dati randomici
     console.info("Chiave " + STORAGE_KEY + " assente, uso dati di prova.");
     return datiRandom();
   }
 
   let dati;
   try {
+    // assegna a dati la stringa dei dati salvati nel formato JSON
     dati = JSON.parse(salvato);
   } catch (e) {
+    // se i dati sono invalidi ritorna dati randomici
     console.warn("Contenuto di " + STORAGE_KEY + " non è JSON valido.", e);
     return datiRandom();
   }
 
+  // se i dati non sono un array ritorna dati randomici
   if (!Array.isArray(dati)) {
     console.warn("Contenuto di " + STORAGE_KEY + " non è un array.");
     return datiRandom();
@@ -159,6 +175,7 @@ function caricaVulnerabilita() {
 
 function salvaVulnerabilita(lista) {
   try {
+    // converte l'array in testo in formato JSON e lo salva nel localStorage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
   } catch (e) {
     console.warn("Salvataggio su localStorage fallito.", e);
@@ -227,7 +244,7 @@ function onEliminaVuln(id) {
   }
 
   salvaVulnerabilita(vulnerabilita);
-  renderTable(vulnerabilita);
+  aggiornaVista();
 }
 
 // ritorna true se lo stato è stato aggiornato
@@ -253,8 +270,117 @@ function onCambiaStato(id, nuovoStato) {
   return true;
 }
 
+// --- filtri e ordinamento ---
+
+// "" = nessun filtro / ordine di inserimento
+const filtri = { severita: "", stato: "", ordine: "" };
+
+// per ordinare serve un rango numerico: "Critical" < "Low" in ordine
+// alfabetico darebbe un risultato senza senso
+const RANGO_SEVERITA = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+
+function rango(severita) {
+  const r = RANGO_SEVERITA[severita];
+  return r === undefined ? 99 : r; // severità sconosciute in fondo
+}
+
+function corrispondeAiFiltri(vuln) {
+  if (filtri.severita && vuln.severita !== filtri.severita) return false;
+  if (filtri.stato && vuln.stato !== filtri.stato) return false;
+  return true;
+}
+
+function filtriAttivi() {
+  return Boolean(filtri.severita || filtri.stato);
+}
+
+function vistaCorrente() {
+  // filter restituisce già un array nuovo, quindi il sort qui sotto non
+  // riordina la lista originale: l'ordine di inserimento resta intatto
+  const vista = vulnerabilita.filter(corrispondeAiFiltri);
+
+  if (filtri.ordine === "sev-desc") {
+    vista.sort(function (a, b) { return rango(a.severita) - rango(b.severita); });
+  } else if (filtri.ordine === "sev-asc") {
+    vista.sort(function (a, b) { return rango(b.severita) - rango(a.severita); });
+  }
+
+  return vista;
+}
+
+function aggiornaVista() {
+  const vista = vistaCorrente();
+
+  // con i filtri attivi "nessuna vulnerabilità registrata" sarebbe falso:
+  // i dati ci sono, è la vista che è vuota
+  renderTable(vista, filtriAttivi()
+    ? "Nessuna vulnerabilità corrisponde ai filtri."
+    : "Nessuna vulnerabilità registrata.");
+
+  const contatore = document.querySelector("#contatore");
+  if (contatore) {
+    contatore.textContent = vista.length === vulnerabilita.length
+      ? vulnerabilita.length + " vulnerabilità"
+      : vista.length + " di " + vulnerabilita.length + " vulnerabilità";
+  }
+}
+
+function popolaFiltro(selettore, valori, etichettaTutti) {
+  const select = document.querySelector(selettore);
+  if (!select) return;
+
+  const tutti = document.createElement("option");
+  tutti.value = "";
+  tutti.textContent = etichettaTutti;
+  select.appendChild(tutti);
+
+  valori.forEach(function (valore) {
+    const option = document.createElement("option");
+    option.value = valore;
+    option.textContent = valore;
+    select.appendChild(option);
+  });
+}
+
+function collegaControlli() {
+  // le opzioni vengono da SEVERITA e STATI: aggiungere un valore lì lo fa
+  // comparire nei filtri senza toccare l'HTML
+  popolaFiltro("#filtroSeverita", SEVERITA, "Tutte");
+  popolaFiltro("#filtroStato", STATI, "Tutti");
+
+  const campi = [
+    { selettore: "#filtroSeverita", chiave: "severita" },
+    { selettore: "#filtroStato", chiave: "stato" },
+    { selettore: "#ordinamento", chiave: "ordine" }
+  ];
+
+  campi.forEach(function (campo) {
+    const select = document.querySelector(campo.selettore);
+    if (!select) return;
+    select.addEventListener("change", function (e) {
+      filtri[campo.chiave] = e.target.value;
+      aggiornaVista();
+    });
+  });
+
+  const azzera = document.querySelector("#azzeraFiltri");
+  if (azzera) {
+    azzera.addEventListener("click", function () {
+      filtri.severita = "";
+      filtri.stato = "";
+      filtri.ordine = "";
+      campi.forEach(function (campo) {
+        const select = document.querySelector(campo.selettore);
+        if (select) select.value = "";
+      });
+      aggiornaVista();
+    });
+  }
+}
+
 // --- avvio ---
 
 vulnerabilita = caricaVulnerabilita();
 salvaVulnerabilita(vulnerabilita); // persiste anche il seed random, così l'eliminazione regge al refresh
-renderTable(vulnerabilita);
+collegaControlli();
+aggiornaVista();

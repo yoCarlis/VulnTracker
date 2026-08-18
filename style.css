@@ -8,6 +8,47 @@ h1 {
   font-size: 1.4rem;
 }
 
+#controlli {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #dfe3e8;
+}
+
+#controlli label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #52606d;
+}
+
+#controlli label:not(:first-child) {
+  margin-left: 0.75rem;
+}
+
+#controlli select,
+#controlli button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  background: #fff;
+}
+
+#controlli button {
+  cursor: pointer;
+}
+
+#contatore {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: #7b8794;
+}
+
 #vulnList {
   border-collapse: collapse;
   width: 100%;
