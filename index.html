@@ -29,7 +29,7 @@
     <span id="contatore"></span>
   </div>
 
-  <form onsubmit="pushVul(); return false;">
+  <form id="formVulnerabilita" onsubmit="pushVul(); return false;">
   <table id="form">
     <tr>
       <td>id</td>
@@ -55,7 +55,8 @@
           <label class="btn-sev critical">
             <input type="radio" name="severita" value="Critical"> Critical
           </label>
-      </div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>sistema</td>
@@ -85,7 +86,6 @@
     <tr>
       <td>data</td>
       <td colspan="2">
-        <label for="data-vulnerabilita"></label>
         <input type="date" id="vul_date" name="data">
       </td>
     </tr>
