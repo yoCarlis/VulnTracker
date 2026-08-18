@@ -10,6 +10,25 @@
 <body>
   <h1>VulnTracker</h1>
 
+  <div id="controlli">
+    <label for="filtroSeverita">Severità</label>
+    <!-- le opzioni sono popolate da app.js a partire da SEVERITA e STATI -->
+    <select id="filtroSeverita"></select>
+
+    <label for="filtroStato">Stato</label>
+    <select id="filtroStato"></select>
+
+    <label for="ordinamento">Ordina</label>
+    <select id="ordinamento">
+      <option value="">Ordine di inserimento</option>
+      <option value="sev-desc">Severità: Critical → Low</option>
+      <option value="sev-asc">Severità: Low → Critical</option>
+    </select>
+
+    <button type="button" id="azzeraFiltri">Azzera</button>
+    <span id="contatore"></span>
+  </div>
+
   <form onsubmit="pushVul(); return false;">
   <table id="form">
     <tr>
