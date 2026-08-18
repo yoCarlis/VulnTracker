@@ -10,10 +10,11 @@
 <body>
   <h1>VulnTracker</h1>
 
-  <form onsubmit="addVuln(); addVulSev(); addVulst(); addVuld(); return false;">
+  <form onsubmit="pushVul(); return false;">
   <table id="form">
     <tr>
       <td>id</td>
+      <td><input type="text" id="vul_id" value="" hidden></td>
     </tr>
     <tr>
       <td>nome</td>
@@ -39,7 +40,7 @@
     </tr>
     <tr>
       <td>sistema</td>
-      <td></td>
+      <td><input type="text" id="vul_sys" value=""></td>
     </tr>
     <tr>
       <td>descrizione</td>
@@ -53,7 +54,7 @@
             <input type="radio" name="stato" value="Open"> Open
           </label>
           <label class="btn-sev InProgress">
-            <input type="radio" name="stato" value="InProgress"> In Progress
+            <input type="radio" name="stato" value="In Progress"> In Progress
           </label>
           <label class="btn-sev Closed">
             <input type="radio" name="stato" value="Closed"> Closed
@@ -66,7 +67,7 @@
       <td>data</td>
       <td colspan="2">
         <label for="data-vulnerabilita"></label>
-        <input type="date" id="data-vulnerabilita" name="data">
+        <input type="date" id="vul_date" name="data">
       </td>
     </tr>
     <tr>
