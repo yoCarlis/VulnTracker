@@ -46,15 +46,6 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 
-#controlli {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #dfe3e8;
-
 #form td {
   padding: 0.35rem 0.75rem 0.35rem 0;
   vertical-align: middle;
@@ -266,7 +257,7 @@ h1 {
   white-space: nowrap;
 }
 
-  .sev-critical {
+.sev-critical {
   background: #fbe4e4;
   color: #8f1b1b;
 }
@@ -285,7 +276,7 @@ h1 {
   background: #e3f1e6;
   color: #1f5b2c;
 }
-  
+
 .stato-select {
   font: inherit;
   font-size: 0.75rem;

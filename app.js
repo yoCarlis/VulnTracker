@@ -530,7 +530,7 @@ function calcolaStat() {
     if(vuln.stato == "In Progress") statistiche.inProgress++;
     if(vuln.stato == "Closed") statistiche.closed++;
   }
-
+}
 
 function pushVul() {
   // un campo per volta: ogni add* mostra già il proprio alert, valutarli tutti
