@@ -13,6 +13,48 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
+#statistiche {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.stat-gruppo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.stat-titolo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #52606d;
+  margin-right: 0.15rem;
+}
+
+#statSeverita,
+#statStato {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  /* i colori arrivano dalle classi .sev-* e .stato-* condivise con la tabella */
+  font-variant-numeric: tabular-nums;
+}
+
+#controlli {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #dfe3e8;
+
 #form td {
   padding: 0.35rem 0.75rem 0.35rem 0;
   vertical-align: middle;
@@ -172,10 +214,6 @@ h1 {
   background: #fff;
 }
 
-#controlli button {
-  cursor: pointer;
-}
-
 #contatore {
   margin-left: auto;
   font-size: 0.85rem;
@@ -228,7 +266,7 @@ h1 {
   white-space: nowrap;
 }
 
-.sev-critical {
+  .sev-critical {
   background: #fbe4e4;
   color: #8f1b1b;
 }
@@ -247,7 +285,7 @@ h1 {
   background: #e3f1e6;
   color: #1f5b2c;
 }
-
+  
 .stato-select {
   font: inherit;
   font-size: 0.75rem;
