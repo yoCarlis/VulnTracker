@@ -131,6 +131,9 @@ tbodyVuln.addEventListener("change", function (e) {
   // altrimenti ricoloro solo questa select: un renderTable completo la
   // ricreerebbe da zero e il focus da tastiera salterebbe via
   select.className = "stato-select stato-" + slug(select.value);
+
+  // qui non passo da aggiornaVista, ma i conteggi per stato sono cambiati
+  renderStatistiche();
 });
 
 // --- caricamento dati ---
@@ -270,10 +273,23 @@ function onCambiaStato(id, nuovoStato) {
   return true;
 }
 
-// --- filtri e ordinamento ---
+// --- filtri, ordinamento e contatore ---
 
 // "" = nessun filtro / ordine di inserimento
 const filtri = { severita: "", stato: "", ordine: "", filtro: "" };
+
+const statistiche = {critical: 0, high: 0, medium: 0, low: 0, open: 0, inProgress: 0, closed: 0  };
+
+// chiave in statistiche -> etichetta a schermo e classe del badge
+const VOCI_STAT = [
+  { chiave: "critical",   etichetta: "Critical",    classe: "sev-critical",      gruppo: "severita" },
+  { chiave: "high",       etichetta: "High",        classe: "sev-high",          gruppo: "severita" },
+  { chiave: "medium",     etichetta: "Medium",      classe: "sev-medium",        gruppo: "severita" },
+  { chiave: "low",        etichetta: "Low",         classe: "sev-low",           gruppo: "severita" },
+  { chiave: "open",       etichetta: "Open",        classe: "stato-open",        gruppo: "stato" },
+  { chiave: "inProgress", etichetta: "In Progress", classe: "stato-in-progress", gruppo: "stato" },
+  { chiave: "closed",     etichetta: "Closed",      classe: "stato-closed",      gruppo: "stato" }
+];
 
 // per ordinare serve un rango numerico: "Critical" < "Low" in ordine
 // alfabetico darebbe un risultato senza senso
@@ -309,8 +325,35 @@ function vistaCorrente() {
   return vista;
 }
 
+function renderStatistiche() {
+  const contenitori = {
+    severita: document.querySelector("#statSeverita"),
+    stato: document.querySelector("#statStato")
+  };
+  if (!contenitori.severita && !contenitori.stato) return;
+
+  calcolaStat(); // ricalcola sempre: i conteggi cambiano a ogni aggiunta/modifica
+
+  const frammenti = {
+    severita: document.createDocumentFragment(),
+    stato: document.createDocumentFragment()
+  };
+
+  VOCI_STAT.forEach(function (voce) {
+    const span = document.createElement("span");
+    span.className = "badge stat " + voce.classe;
+    span.textContent = voce.etichetta + ": " + statistiche[voce.chiave];
+    frammenti[voce.gruppo].appendChild(span);
+  });
+
+  if (contenitori.severita) contenitori.severita.replaceChildren(frammenti.severita);
+  if (contenitori.stato) contenitori.stato.replaceChildren(frammenti.stato);
+}
+
 function aggiornaVista() {
   const vista = vistaCorrente();
+
+  renderStatistiche();
 
   // con i filtri attivi "nessuna vulnerabilità registrata" sarebbe falso:
   // i dati ci sono, è la vista che è vuota
@@ -463,6 +506,30 @@ function addDate(){
   // il resto della tabella usa gg/mm/aaaa (vedi dataCasuale): converto qui
   const parti = date_el.split("-");
   return parti[2] + "/" + parti[1] + "/" + parti[0];
+}
+
+function calcolaStat() {
+  statistiche.critical = 0;
+  statistiche.high = 0;
+  statistiche.medium = 0;
+  statistiche.low = 0;
+
+  statistiche.open = 0;
+  statistiche.inProgress = 0;
+  statistiche.closed = 0;
+  
+  // for...of dà gli elementi; for...in darebbe gli indici ("0", "1", ...)
+  // e vuln.severita sarebbe sempre undefined
+  for (const vuln of vulnerabilita){
+    if(vuln.severita == "Critical") statistiche.critical++;
+    if(vuln.severita == "High") statistiche.high++;
+    if(vuln.severita == "Medium") statistiche.medium++;
+    if(vuln.severita == "Low") statistiche.low++;
+
+    if(vuln.stato == "Open") statistiche.open++;
+    if(vuln.stato == "In Progress") statistiche.inProgress++;
+    if(vuln.stato == "Closed") statistiche.closed++;
+  }
 }
 
 function pushVul() {
