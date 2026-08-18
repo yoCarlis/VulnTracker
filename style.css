@@ -8,6 +8,11 @@ h1 {
   font-size: 1.4rem;
 }
 
+#form{
+  padding-top: 1rem;
+  padding-bottom: 1.75rem;
+}
+
 #controlli {
   display: flex;
   align-items: center;
@@ -15,7 +20,9 @@ h1 {
   flex-wrap: wrap;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
+  padding-top: 0.75rem;
   border-bottom: 1px solid #dfe3e8;
+  border-top: 1px solid #dfe3e8;
 }
 
 #controlli label {
