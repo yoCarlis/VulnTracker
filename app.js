@@ -273,7 +273,7 @@ function onCambiaStato(id, nuovoStato) {
 // --- filtri e ordinamento ---
 
 // "" = nessun filtro / ordine di inserimento
-const filtri = { severita: "", stato: "", ordine: "" };
+const filtri = { severita: "", stato: "", ordine: "", filtro: "" };
 
 // per ordinare serve un rango numerico: "Critical" < "Low" in ordine
 // alfabetico darebbe un risultato senza senso
@@ -287,11 +287,12 @@ function rango(severita) {
 function corrispondeAiFiltri(vuln) {
   if (filtri.severita && vuln.severita !== filtri.severita) return false;
   if (filtri.stato && vuln.stato !== filtri.stato) return false;
+  if (filtri.filtro && vuln.nome.toLowerCase().indexOf(filtri.filtro.toLowerCase()) == -1 && vuln.sistema.toLowerCase().indexOf(filtri.filtro.toLowerCase()) == -1) return false;
   return true;
 }
 
 function filtriAttivi() {
-  return Boolean(filtri.severita || filtri.stato);
+  return Boolean(filtri.severita || filtri.stato || filtri.filtro);
 }
 
 function vistaCorrente() {
@@ -351,7 +352,7 @@ function collegaControlli() {
   const campi = [
     { selettore: "#filtroSeverita", chiave: "severita" },
     { selettore: "#filtroStato", chiave: "stato" },
-    { selettore: "#ordinamento", chiave: "ordine" }
+    { selettore: "#ordinamento", chiave: "ordine" },
   ];
 
   campi.forEach(function (campo) {
@@ -363,16 +364,24 @@ function collegaControlli() {
     });
   });
 
+  let input = document.getElementById("filtro");
+  input.addEventListener("keyup", function(e) {
+    filtri.filtro = e.target.value;
+    aggiornaVista();
+  });
+
   const azzera = document.querySelector("#azzeraFiltri");
   if (azzera) {
     azzera.addEventListener("click", function () {
       filtri.severita = "";
       filtri.stato = "";
       filtri.ordine = "";
+      filtri.filtro = "";
       campi.forEach(function (campo) {
         const select = document.querySelector(campo.selettore);
         if (select) select.value = "";
       });
+      input.value = "";
       aggiornaVista();
     });
   }
