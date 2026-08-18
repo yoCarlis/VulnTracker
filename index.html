@@ -10,6 +10,18 @@
 <body>
   <h1>VulnTracker</h1>
 
+  <!-- i badge sono generati da renderStatistiche() a partire da statistiche -->
+  <div id="statistiche">
+    <div class="stat-gruppo">
+      <span class="stat-titolo">Severità</span>
+      <span id="statSeverita"></span>
+    </div>
+    <div class="stat-gruppo">
+      <span class="stat-titolo">Stato</span>
+      <span id="statStato"></span>
+    </div>
+  </div>
+
   <div id="controlli">
     <label for="filtroSeverita">Severità</label>
     <!-- le opzioni sono popolate da app.js a partire da SEVERITA e STATI -->
@@ -34,6 +46,7 @@
 
   <form id="formVulnerabilita" onsubmit="pushVul(); return false;">
   <table id="form">
+    <tbody>
     <tr>
       <td>id</td>
       <td><input type="text" id="vul_id" value="" hidden></td>
@@ -96,6 +109,7 @@
       <td>azioni</td>
       <td><button type="submit">Aggiungi</button></td>
     </tr>
+    </tbody>
   </table>
   </form>
   <table id="vulnList">

@@ -8,6 +8,39 @@ h1 {
   font-size: 1.4rem;
 }
 
+#statistiche {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.stat-gruppo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.stat-titolo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #52606d;
+  margin-right: 0.15rem;
+}
+
+#statSeverita,
+#statStato {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  /* i colori arrivano dalle classi .sev-* e .stato-* condivise con la tabella */
+  font-variant-numeric: tabular-nums;
+}
+
 #controlli {
   display: flex;
   align-items: center;
