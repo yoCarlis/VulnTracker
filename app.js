@@ -253,6 +253,99 @@ function onCambiaStato(id, nuovoStato) {
   return true;
 }
 
+function addId() {
+  let id = Date.now() + Math.floor(Math.random() * 100);
+  console.log(id);
+  return id;
+}
+
+function addVuln() {
+  const name_el = document.getElementById("vul_name");
+  let nameVal = name_el.value;
+  if (!nameVal) {
+    alert("Inserisci un nome valido");
+    return false;
+  }
+
+  console.log(nameVal);
+  return nameVal;
+}
+
+function addVulSev() {
+  const sev_el = document.querySelector('input[name="severita"]:checked');
+  if (!sev_el) {
+    alert("Seleziona una severità");
+    return false;
+  }
+
+  let sevVal = sev_el.value;
+  console.log(sevVal);
+  return sevVal;
+}
+
+function addSys() {
+  const sys_el = document.getElementById("vul_sys");
+  let sysVal = sys_el.value;
+  if (!sysVal) {
+    alert("Inserisci il sistema");
+    return false;
+  }
+
+  console.log(sysVal);
+  return sysVal;
+}
+
+function addVulst() {
+  const state_el = document.querySelector('input[name="stato"]:checked');
+  if (!state_el) {
+    alert("Seleziona uno stato");
+    return false;
+  }
+
+  let stateVal = state_el.value;
+  console.log(stateVal);
+  return stateVal;
+}
+
+function addVuld() {
+  const desc_el = document.getElementById("vul_desc");
+  let descVal = desc_el.value;
+  console.log(descVal);
+  return descVal;
+}
+
+function addDate(){
+  const date_el = document.getElementById("vul_date").value;
+  if (!date_el) {
+    alert("Inserisci una data valida");
+    return false;
+  }
+
+  let dateVal = date_el;
+  console.log(dateVal);
+  return dateVal;
+}
+
+function pushVul() {
+  let vul = {
+    id: addId(),
+    nome: addVuln(),
+    severita: addVulSev(),
+    sistema: addSys(),
+    stato: addVulst(),
+    descrizione: addVuld(),
+    data: addDate()
+  };
+
+const valido = Object.values(vul).every(valore => Boolean(valore));
+if(!valido) return false;
+
+vulnerabilita.push(vul);
+salvaVulnerabilita(vulnerabilita);
+renderTable(vulnerabilita);
+document.getElementById("formVulnerabilita").reset();
+}
+
 // --- avvio ---
 
 vulnerabilita = caricaVulnerabilita();

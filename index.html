@@ -10,6 +10,72 @@
 <body>
   <h1>VulnTracker</h1>
 
+  <form onsubmit="pushVul(); return false;">
+  <table id="form">
+    <tr>
+      <td>id</td>
+      <td><input type="text" id="vul_id" value="" hidden></td>
+    </tr>
+    <tr>
+      <td>nome</td>
+      <td><input type="text" id="vul_name" value=""></td>
+    </tr>
+    <tr>
+      <td>severita</td>
+      <td colspan="2">
+        <div class="sevbtn">
+          <label class="btn-sev low">
+            <input type="radio" name="severita" value="Low"> Low
+          </label>
+          <label class="btn-sev medium">
+            <input type="radio" name="severita" value="Medium"> Medium
+          </label>
+          <label class="btn-sev high">
+            <input type="radio" name="severita" value="High"> High
+          </label>
+          <label class="btn-sev critical">
+            <input type="radio" name="severita" value="Critical"> Critical
+          </label>
+      </div>
+    </tr>
+    <tr>
+      <td>sistema</td>
+      <td><input type="text" id="vul_sys" value=""></td>
+    </tr>
+    <tr>
+      <td>descrizione</td>
+      <td><input type="text" id="vul_desc" value=""></td>
+    </tr>
+    <tr>
+      <td>stato</td>
+      <td colspan="2">
+        <div class="sttbtn">
+          <label class="btn-sev Open">
+            <input type="radio" name="stato" value="Open"> Open
+          </label>
+          <label class="btn-sev InProgress">
+            <input type="radio" name="stato" value="In Progress"> In Progress
+          </label>
+          <label class="btn-sev Closed">
+            <input type="radio" name="stato" value="Closed"> Closed
+          </label>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>data</td>
+      <td colspan="2">
+        <label for="data-vulnerabilita"></label>
+        <input type="date" id="vul_date" name="data">
+      </td>
+    </tr>
+    <tr>
+      <td>azioni</td>
+      <td><button type="submit">Aggiungi</button></td>
+    </tr>
+  </table>
+  </form>
   <table id="vulnList">
     <thead>
       <tr>
